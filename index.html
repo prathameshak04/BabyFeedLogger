@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description"
+        content="AI-powered baby feeding tracker — log sessions, track patterns, and get smart insights." />
+    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>BabyFeed AI — Smart Feeding Logger</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍼</text></svg>" />
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍼</text></svg>" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <!-- Background animated blobs -->
+        <div class="bg-blobs">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+
+        <!-- ===== ONBOARDING SCREEN ===== -->
+        <div id="onboardingScreen" class="screen onboarding-screen">
+            <div class="onboarding-card">
+                <div class="onboarding-header">
+                    <span class="onboarding-emoji">🍼</span>
+                    <h1>BabyFeed AI</h1>
+                    <p class="onboarding-subtitle">Smart Feeding Logger</p>
+                </div>
+                <p class="onboarding-desc">Tell us about your little one so we can provide personalized feeding
+                    insights.</p>
+                <form id="onboardingForm" class="onboarding-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="babyName">Baby's Name</label>
+                        <input type="text" id="babyName" placeholder="e.g. Aria" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="babyDob">Date of Birth</label>
+                        <input type="date" id="babyDob" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Feeding Type</label>
+                        <div class="feed-type-selector">
+                            <label class="feed-type-option">
+                                <input type="radio" name="feedType" value="breast" checked />
+                                <span class="feed-type-card"><span
+                                        class="feed-type-icon">🤱</span><span>Breast</span></span>
+                            </label>
+                            <label class="feed-type-option">
+                                <input type="radio" name="feedType" value="bottle" />
+                                <span class="feed-type-card"><span
+                                        class="feed-type-icon">🍼</span><span>Bottle</span></span>
+                            </label>
+                            <label class="feed-type-option">
+                                <input type="radio" name="feedType" value="mixed" />
+                                <span class="feed-type-card"><span
+                                        class="feed-type-icon">🔄</span><span>Mixed</span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="babyNotes">Notes (optional)</label>
+                        <textarea id="babyNotes" placeholder="Any allergies, preferences, or notes…"
+                            rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" id="startBtn">
+                        <span>Get Started</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD SCREEN ===== -->
+        <div id="dashboardScreen" class="screen dashboard-screen hidden">
+            <header class="dash-header">
+                <div class="dash-header-info">
+                    <div class="dash-logo"><span>🍼</span>
+                        <h1>BabyFeed AI</h1>
+                    </div>
+                    <p id="babyInfoText" class="baby-info-text"></p>
+                </div>
+                <button id="settingsBtn" class="icon-btn" title="Edit Profile">⚙️</button>
+            </header>
+
+            <!-- Tab Navigation -->
+            <nav class="tab-bar">
+                <button class="tab-btn active" data-tab="home">
+                    <span class="tab-icon">🏠</span>
+                    <span class="tab-label">Home</span>
+                </button>
+                <button class="tab-btn" data-tab="activity">
+                    <span class="tab-icon">📋</span>
+                    <span class="tab-label">Activity</span>
+                </button>
+                <button class="tab-btn" data-tab="insights">
+                    <span class="tab-icon">🧠</span>
+                    <span class="tab-label">Insights</span>
+                </button>
+            </nav>
+
+            <!-- ===== TAB: HOME ===== -->
+            <main id="tabHome" class="tab-content dash-card">
+                <!-- Feeding Session -->
+                <section class="session-section">
+                    <div id="sessionIdle" class="session-idle">
+                        <div class="session-prompt-icon">🍼</div>
+                        <p class="session-prompt-text">Ready to log a feeding?</p>
+                        <div class="quick-feed-type" id="quickFeedType">
+                            <button class="feed-chip active" data-type="left-breast">🤱 Left</button>
+                            <button class="feed-chip" data-type="right-breast">🤱 Right</button>
+                            <button class="feed-chip" data-type="bottle">🍼 Bottle</button>
+                        </div>
+                        <button id="startFeedBtn" class="btn-start">
+                            <span class="btn-start-icon">▶</span>
+                            <span>Start Feeding</span>
+                        </button>
+                    </div>
+                    <div id="sessionActive" class="session-active hidden">
+                        <div class="timer-ring">
+                            <div class="timer-inner">
+                                <span id="timerDisplay" class="timer-display">00:00</span>
+                                <span id="timerLabel" class="timer-label">Left Breast</span>
+                            </div>
+                        </div>
+                        <button id="stopFeedBtn" class="btn-stop">
+                            <span class="btn-stop-icon">⏹</span>
+                            <span>End Feeding</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Poop Tracking -->
+                <section class="poop-section">
+                    <div class="poop-row">
+                        <button id="logPoopBtn" class="btn-poop">
+                            <span>💩</span>
+                            <span>Log Diaper</span>
+                        </button>
+                        <div class="poop-stat">
+                            <span id="poopTodayCount" class="poop-count">0</span>
+                            <span class="poop-label">diapers today</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Stats -->
+                <section class="stats-section">
+                    <h3 class="section-title">Today's Overview</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-icon">📊</span>
+                            <span id="statTodayCount" class="stat-value">0</span>
+                            <span class="stat-label">Feeds Today</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">⏱️</span>
+                            <span id="statAvgDuration" class="stat-value">—</span>
+                            <span class="stat-label">Avg Duration</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">🕐</span>
+                            <span id="statLastFeed" class="stat-value">—</span>
+                            <span class="stat-label">Last Feed</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">📈</span>
+                            <span id="statTotalTime" class="stat-value">—</span>
+                            <span class="stat-label">Total Today</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Milestones -->
+                <section class="milestones-section">
+                    <h3 class="section-title">🎯 Milestones</h3>
+                    <div id="milestonesContainer" class="milestones-container">
+                        <div class="insight-empty">Milestones will appear based on your baby's age.</div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- ===== TAB: ACTIVITY ===== -->
+            <main id="tabActivity" class="tab-content dash-card hidden">
+                <section class="history-section">
+                    <div class="history-header">
+                        <h3 class="section-title">Activity Log</h3>
+                        <button id="clearHistoryBtn" class="text-btn hidden">Clear All</button>
+                    </div>
+                    <div id="historyContainer" class="history-container">
+                        <div class="history-empty">No records yet.</div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- ===== TAB: INSIGHTS ===== -->
+            <main id="tabInsights" class="tab-content dash-card hidden">
+                <section class="insights-section">
+                    <h3 class="section-title">🧠 AI Insights</h3>
+                    <div id="insightsContainer" class="insights-container">
+                        <div class="insight-empty">Log a few feeding sessions to unlock AI-powered insights.</div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="footer">
+                <p>BabyFeed AI — Smart insights for happy feeding 💛</p>
+            </footer>
+        </div>
+
+        <!-- ===== POOP MODAL ===== -->
+        <div id="poopModal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h3 class="modal-title">💩 Log Diaper Change</h3>
+                <form id="poopForm">
+                    <div class="form-group">
+                        <label>Color</label>
+                        <div class="chip-row">
+                            <button type="button" class="poop-color-chip" data-color="yellow">🟡 Yellow</button>
+                            <button type="button" class="poop-color-chip active" data-color="brown">🟤 Brown</button>
+                            <button type="button" class="poop-color-chip" data-color="green">🟢 Green</button>
+                            <button type="button" class="poop-color-chip" data-color="black">⚫ Black</button>
+                            <button type="button" class="poop-color-chip" data-color="red">🔴 Red</button>
+                            <button type="button" class="poop-color-chip" data-color="white">⚪ White</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Consistency</label>
+                        <div class="chip-row">
+                            <button type="button" class="poop-consistency-chip" data-consistency="liquid">💧
+                                Liquid</button>
+                            <button type="button" class="poop-consistency-chip active" data-consistency="soft">🧈
+                                Soft</button>
+                            <button type="button" class="poop-consistency-chip" data-consistency="firm">🪵 Firm</button>
+                            <button type="button" class="poop-consistency-chip" data-consistency="hard">🪨 Hard</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="poopNotes">Notes (optional)</label>
+                        <textarea id="poopNotes" placeholder="Any observations…" rows="2"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="poopCancelBtn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary btn-sm">💩 Log It</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
