@@ -9,8 +9,10 @@
 class StorageManager {
     static PROFILE_KEY = 'babyfeed_profile';
     static SESSIONS_KEY = 'babyfeed_sessions';
-    static ACTIVE_KEY = 'babyfeed_active_session';
-    static POOP_KEY = 'babyfeed_poop_logs';
+    static ACTIVE_KEY = 'babyfeed_active';
+    static POOP_KEY = 'babyfeed_poop';
+    static MEDICINES_KEY = 'babyfeed_medicines';
+    static MEDICINE_LOGS_KEY = 'babyfeed_medicine_logs';
 
     static getProfile() {
         const data = localStorage.getItem(this.PROFILE_KEY);
@@ -63,6 +65,32 @@ class StorageManager {
 
     static clearPoopLogs() {
         localStorage.removeItem(this.POOP_KEY);
+    }
+
+    // Medicine list
+    static getMedicines() {
+        const data = localStorage.getItem(this.MEDICINES_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+
+    static saveMedicines(list) {
+        localStorage.setItem(this.MEDICINES_KEY, JSON.stringify(list));
+    }
+
+    // Medicine dose logs
+    static getMedicineLogs() {
+        const data = localStorage.getItem(this.MEDICINE_LOGS_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+
+    static addMedicineLog(log) {
+        const logs = this.getMedicineLogs();
+        logs.unshift(log);
+        localStorage.setItem(this.MEDICINE_LOGS_KEY, JSON.stringify(logs));
+    }
+
+    static clearMedicineLogs() {
+        localStorage.removeItem(this.MEDICINE_LOGS_KEY);
     }
 }
 
@@ -414,6 +442,12 @@ class BabyFeedApp {
         this.timerDisplay = document.getElementById('timerDisplay');
         this.timerLabel = document.getElementById('timerLabel');
         this.quickFeedType = document.getElementById('quickFeedType');
+
+        // Bottle form
+        this.bottleForm = document.getElementById('bottleForm');
+        this.bottleAmountInput = document.getElementById('bottleAmount');
+        this.bottleTimeInput = document.getElementById('bottleTime');
+        this.logBottleBtn = document.getElementById('logBottleBtn');
         this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
         // Poop
@@ -422,6 +456,19 @@ class BabyFeedApp {
         this.poopForm = document.getElementById('poopForm');
         this.poopCancelBtn = document.getElementById('poopCancelBtn');
         this.poopTodayCount = document.getElementById('poopTodayCount');
+
+        // Medicine
+        this.addMedBtn = document.getElementById('addMedBtn');
+        this.medModal = document.getElementById('medModal');
+        this.medForm = document.getElementById('medForm');
+        this.medCancelBtn = document.getElementById('medCancelBtn');
+        this.medTodayCount = document.getElementById('medTodayCount');
+        this.medicineListContainer = document.getElementById('medicineListContainer');
+        this.medHistoryContainer = document.getElementById('medHistoryContainer');
+        this.medCalendarContainer = document.getElementById('medCalendarContainer');
+        this.medFilter = 'all';
+        this.medCalendarMonth = new Date(); // current viewing month
+        this.medSelectedDate = null; // selected date string (YYYY-MM-DD) or null for today
 
         // Stats
         this.statTodayCount = document.getElementById('statTodayCount');
@@ -438,7 +485,8 @@ class BabyFeedApp {
         this.tabPanels = {
             home: document.getElementById('tabHome'),
             activity: document.getElementById('tabActivity'),
-            insights: document.getElementById('tabInsights')
+            insights: document.getElementById('tabInsights'),
+            medicine: document.getElementById('tabMedicine')
         };
         this.tabBtns = document.querySelectorAll('.tab-btn');
         this.activeTab = 'home';
@@ -454,6 +502,9 @@ class BabyFeedApp {
         this.startFeedBtn.addEventListener('click', () => this.startSession());
         this.stopFeedBtn.addEventListener('click', () => this.stopSession());
         this.settingsBtn.addEventListener('click', () => this.resetProfile());
+        if (this.logBottleBtn) {
+            this.logBottleBtn.addEventListener('click', () => this.logBottleFeed());
+        }
         this.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
 
         // Feed type chips
@@ -490,6 +541,36 @@ class BabyFeedApp {
             chip.addEventListener('click', () => {
                 document.querySelectorAll('.poop-consistency-chip').forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
+            });
+        });
+
+        // Medicine events
+        if (this.addMedBtn) {
+            this.addMedBtn.addEventListener('click', () => this.openMedModal());
+        }
+        if (this.medCancelBtn) {
+            this.medCancelBtn.addEventListener('click', () => this.closeMedModal());
+        }
+        if (this.medForm) {
+            this.medForm.addEventListener('submit', (e) => this.handleAddMedicine(e));
+        }
+
+        // Medicine "For" selector chips in modal
+        document.querySelectorAll('.med-for-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.med-for-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
+
+        // Medicine filter toggle (Baby / Mom / All)
+        document.querySelectorAll('.med-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.med-toggle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.medFilter = btn.dataset.medFilter;
+                this.renderMedicineList();
+                this.renderMedicineHistory();
             });
         });
 
@@ -546,6 +627,11 @@ class BabyFeedApp {
         // Refresh data for the active tab
         if (tabName === 'activity') this.updateHistory();
         if (tabName === 'insights') this.updateInsights();
+        if (tabName === 'medicine') {
+            this.renderMedicineList();
+            this.renderMedicineHistory();
+            this.updateMedicineStats();
+        }
     }
 
     showDashboard() {
@@ -558,6 +644,7 @@ class BabyFeedApp {
         this.updateHistory();
         this.updateFeedChipsForProfile();
         this.updatePoopStats();
+        this.updateMedicineStats();
     }
 
     // ---- Onboarding ----
@@ -608,12 +695,70 @@ class BabyFeedApp {
                 chip.classList.remove('hidden');
             }
         });
+        // Show/hide bottle form based on current feed type
+        this.toggleBottleForm();
     }
 
     selectFeedType(chip) {
         this.quickFeedType.querySelectorAll('.feed-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         this.currentFeedType = chip.dataset.type;
+        this.toggleBottleForm();
+    }
+
+    toggleBottleForm() {
+        const isBottle = this.currentFeedType === 'bottle';
+        if (this.bottleForm) {
+            this.bottleForm.classList.toggle('hidden', !isBottle);
+        }
+        if (this.startFeedBtn) {
+            this.startFeedBtn.classList.toggle('hidden', isBottle);
+        }
+        // Set bottle time to current time when showing
+        if (isBottle && this.bottleTimeInput) {
+            const now = new Date();
+            this.bottleTimeInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
+    }
+
+    logBottleFeed() {
+        const amountStr = this.bottleAmountInput ? this.bottleAmountInput.value : '';
+        const amount = parseInt(amountStr, 10);
+        if (!amount || amount <= 0) {
+            this.bottleAmountInput.focus();
+            return;
+        }
+
+        // Build the timestamp from the time input
+        const timeVal = this.bottleTimeInput ? this.bottleTimeInput.value : '';
+        let feedDate = new Date();
+        if (timeVal) {
+            const [h, m] = timeVal.split(':').map(Number);
+            feedDate.setHours(h, m, 0, 0);
+        }
+
+        const session = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            startTime: feedDate.toISOString(),
+            endTime: feedDate.toISOString(),
+            durationMs: 0,
+            feedType: 'bottle',
+            amountMl: amount
+        };
+
+        StorageManager.addSession(session);
+
+        // Reset form
+        if (this.bottleAmountInput) this.bottleAmountInput.value = '';
+        // Refresh time to current
+        const now = new Date();
+        if (this.bottleTimeInput) {
+            this.bottleTimeInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
+
+        this.updateStats();
+        this.updateInsights();
+        this.updateHistory();
     }
 
     // ---- Session Management ----
@@ -729,8 +874,10 @@ class BabyFeedApp {
 
         this.statTodayCount.textContent = todaySessions.length;
 
-        if (sessions.length > 0) {
-            const avg = sessions.reduce((sum, s) => sum + s.durationMs, 0) / sessions.length;
+        // Avg duration — only count non-bottle (timed) sessions
+        const timedSessions = sessions.filter(s => s.feedType !== 'bottle' || !s.amountMl);
+        if (timedSessions.length > 0) {
+            const avg = timedSessions.reduce((sum, s) => sum + s.durationMs, 0) / timedSessions.length;
             this.statAvgDuration.textContent = this.formatDurationShort(avg);
         } else {
             this.statAvgDuration.textContent = '—';
@@ -743,11 +890,17 @@ class BabyFeedApp {
             this.statLastFeed.textContent = '—';
         }
 
+        // Total Bottle Milk Today
         if (todaySessions.length > 0) {
-            const total = todaySessions.reduce((sum, s) => sum + s.durationMs, 0);
-            this.statTotalTime.textContent = this.formatDurationShort(total);
+            const todayBottle = todaySessions.filter(s => s.amountMl);
+            if (todayBottle.length > 0) {
+                const totalMl = todayBottle.reduce((sum, s) => sum + s.amountMl, 0);
+                this.statTotalTime.textContent = `${totalMl}ml`;
+            } else {
+                this.statTotalTime.textContent = '0ml';
+            }
         } else {
-            this.statTotalTime.textContent = '—';
+            this.statTotalTime.textContent = '0ml';
         }
     }
 
@@ -797,12 +950,13 @@ class BabyFeedApp {
         `).join('');
     }
 
-    // ---- History (combined feed + poop) ----
+    // ---- History (combined feed + poop + medicine) ----
     updateHistory() {
         const sessions = StorageManager.getSessions();
         const poopLogs = StorageManager.getPoopLogs();
+        const medLogs = StorageManager.getMedicineLogs();
 
-        if (sessions.length === 0 && poopLogs.length === 0) {
+        if (sessions.length === 0 && poopLogs.length === 0 && medLogs.length === 0) {
             this.historyContainer.innerHTML = '<div class="history-empty">No records yet.</div>';
             this.clearHistoryBtn.classList.add('hidden');
             return;
@@ -813,6 +967,7 @@ class BabyFeedApp {
         const events = [];
         sessions.forEach(s => events.push({ type: 'feed', time: s.startTime, data: s }));
         poopLogs.forEach(p => events.push({ type: 'poop', time: p.time, data: p }));
+        medLogs.forEach(m => events.push({ type: 'medicine', time: m.time, data: m }));
         events.sort((a, b) => new Date(b.time) - new Date(a.time));
 
         // Group by date
@@ -830,18 +985,33 @@ class BabyFeedApp {
                 if (ev.type === 'feed') {
                     const s = ev.data;
                     const startTime = new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const endTime = new Date(s.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     const icon = s.feedType === 'bottle' ? '🍼' : '🤱';
-                    html += `
-                        <div class="history-card">
-                            <span class="history-icon">${icon}</span>
-                            <div class="history-info">
-                                <div class="history-type">${this.getFeedTypeLabel(s.feedType)}</div>
-                                <div class="history-time">${startTime} — ${endTime}</div>
-                            </div>
-                            <span class="history-duration">${this.formatDurationShort(s.durationMs)}</span>
-                        </div>`;
-                } else {
+
+                    if (s.amountMl) {
+                        // Bottle feed — show ml and time
+                        html += `
+                            <div class="history-card">
+                                <span class="history-icon">${icon}</span>
+                                <div class="history-info">
+                                    <div class="history-type">Bottle · ${s.amountMl}ml</div>
+                                    <div class="history-time">${startTime}</div>
+                                </div>
+                                <span class="history-duration">${s.amountMl}ml</span>
+                            </div>`;
+                    } else {
+                        // Timed feed (breast)
+                        const endTime = new Date(s.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        html += `
+                            <div class="history-card">
+                                <span class="history-icon">${icon}</span>
+                                <div class="history-info">
+                                    <div class="history-type">${this.getFeedTypeLabel(s.feedType)}</div>
+                                    <div class="history-time">${startTime} — ${endTime}</div>
+                                </div>
+                                <span class="history-duration">${this.formatDurationShort(s.durationMs)}</span>
+                            </div>`;
+                    }
+                } else if (ev.type === 'poop') {
                     const p = ev.data;
                     const time = new Date(p.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     const colorEmojis = { yellow: '🟡', green: '🟢', brown: '🟤', black: '⚫', red: '🔴', white: '⚪' };
@@ -854,6 +1024,19 @@ class BabyFeedApp {
                             </div>
                             <span class="history-duration poop-badge">💩</span>
                         </div>`;
+                } else if (ev.type === 'medicine') {
+                    const m = ev.data;
+                    const time = new Date(m.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const forEmoji = m.for === 'baby' ? '👶🏻' : '👩🏻';
+                    html += `
+                        <div class="history-card med-history-card">
+                            <span class="history-icon">💊</span>
+                            <div class="history-info">
+                                <div class="history-type">${m.medicineName}</div>
+                                <div class="history-time">${time} · ${forEmoji} ${m.for === 'baby' ? 'Baby' : 'Mom'}${m.dosage ? ' · ' + m.dosage : ''}</div>
+                            </div>
+                            <span class="history-duration med-badge">${forEmoji}</span>
+                        </div>`;
                 }
             });
         }
@@ -861,14 +1044,318 @@ class BabyFeedApp {
     }
 
     clearHistory() {
-        if (confirm('Delete all records (feeds + diapers)? This cannot be undone.')) {
+        if (confirm('Delete all records (feeds, diapers & medicine doses)? This cannot be undone.')) {
             StorageManager.clearSessions();
             StorageManager.clearPoopLogs();
+            StorageManager.clearMedicineLogs();
             this.updateStats();
             this.updatePoopStats();
+            this.updateMedicineStats();
             this.updateInsights();
             this.updateHistory();
+            this.renderMedicineHistory();
         }
+    }
+
+    // ---- Medicine Tracker ----
+    openMedModal() {
+        if (this.medModal) this.medModal.classList.remove('hidden');
+    }
+
+    closeMedModal() {
+        if (this.medModal) this.medModal.classList.add('hidden');
+    }
+
+    handleAddMedicine(e) {
+        e.preventDefault();
+        const name = document.getElementById('medName').value.trim();
+        if (!name) return;
+
+        const activeFor = document.querySelector('.med-for-chip.active');
+        const dosage = document.getElementById('medDosage').value.trim();
+        const notes = document.getElementById('medNotes').value.trim();
+
+        const med = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            name,
+            for: activeFor ? activeFor.dataset.for : 'baby',
+            dosage: dosage || '',
+            notes: notes || '',
+            active: true,
+            createdAt: new Date().toISOString()
+        };
+
+        const medicines = StorageManager.getMedicines();
+        medicines.push(med);
+        StorageManager.saveMedicines(medicines);
+
+        this.closeMedModal();
+        this.renderMedicineList();
+
+        // Reset form
+        document.getElementById('medName').value = '';
+        document.getElementById('medDosage').value = '';
+        document.getElementById('medNotes').value = '';
+    }
+
+    removeMedicine(id) {
+        this.closeMedMenu();
+        const medicines = StorageManager.getMedicines();
+        const med = medicines.find(m => m.id === id);
+        if (!med) return;
+        StorageManager.saveMedicines(medicines.filter(m => m.id !== id));
+        this.renderMedicineList();
+    }
+
+    toggleMedicine(id) {
+        this.closeMedMenu();
+        const medicines = StorageManager.getMedicines();
+        const med = medicines.find(m => m.id === id);
+        if (!med) return;
+        med.active = !med.active;
+        StorageManager.saveMedicines(medicines);
+        this.renderMedicineList();
+    }
+
+    takeMedicine(id) {
+        const medicines = StorageManager.getMedicines();
+        const med = medicines.find(m => m.id === id);
+        if (!med) return;
+        if (!med.active) {
+            alert(med.name + ' is currently paused. Resume it first to log a dose.');
+            return;
+        }
+
+        const log = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            medicineId: med.id,
+            medicineName: med.name,
+            for: med.for,
+            dosage: med.dosage,
+            time: new Date().toISOString()
+        };
+
+        StorageManager.addMedicineLog(log);
+        this.updateMedicineStats();
+        this.renderMedicineList();
+        this.renderMedicineHistory();
+    }
+
+    updateMedicineStats() {
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const todayDoses = StorageManager.getMedicineLogs().filter(l => new Date(l.time) >= todayStart);
+        if (this.medTodayCount) this.medTodayCount.textContent = todayDoses.length;
+    }
+
+    renderMedicineList() {
+        let medicines = StorageManager.getMedicines();
+        if (this.medFilter !== 'all') {
+            medicines = medicines.filter(m => m.for === this.medFilter);
+        }
+        // Active medicines first, paused at the bottom
+        medicines.sort((a, b) => (b.active !== false ? 1 : 0) - (a.active !== false ? 1 : 0));
+
+        if (medicines.length === 0) {
+            this.medicineListContainer.innerHTML = '<div class="med-empty">No medicines added yet. Tap ＋ Add to get started.</div>';
+            return;
+        }
+
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const todayLogs = StorageManager.getMedicineLogs().filter(l => new Date(l.time) >= todayStart);
+
+        this.medicineListContainer.innerHTML = medicines.map(med => {
+            const forEmoji = med.for === 'baby' ? '👶🏻' : '👩🏻';
+            const forLabel = med.for === 'baby' ? 'Baby' : 'Mom';
+            const todayCount = todayLogs.filter(l => l.medicineId === med.id).length;
+            const lastDose = StorageManager.getMedicineLogs().find(l => l.medicineId === med.id);
+            const lastTime = lastDose
+                ? new Date(lastDose.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : 'Never';
+            const isActive = med.active !== false;
+            const statusLabel = isActive ? '' : '<span class="med-paused-tag">PAUSED</span>';
+
+            return `
+                <div class="med-card ${isActive ? '' : 'med-card-paused'}">
+                    <div class="med-card-info">
+                        <div class="med-card-name">${forEmoji} ${med.name} ${statusLabel}</div>
+                        <div class="med-card-detail">
+                            ${med.dosage ? '<span class="med-dosage">' + med.dosage + '</span> · ' : ''}
+                            <span class="med-for-tag ${med.for}">${forLabel}</span>
+                            · Last: ${lastTime}
+                            ${todayCount > 0 ? ' · <span class="med-today-badge">' + todayCount + 'x today</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="med-card-actions">
+                        ${isActive ? `<button class="btn-take-med" onclick="window.__app.takeMedicine('${med.id}')" title="Take dose">✅ Take</button>` : `<button class="btn-resume-inline" onclick="window.__app.toggleMedicine('${med.id}')" title="Resume">▶️ Resume</button>`}
+                        <button class="btn-med-more" onclick="window.__app.showMedMenu('${med.id}')" title="Options">⋯</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    showMedMenu(id) {
+        const medicines = StorageManager.getMedicines();
+        const med = medicines.find(m => m.id === id);
+        if (!med) return;
+        const isActive = med.active !== false;
+        const pauseLabel = isActive ? '⏸ Pause Medicine' : '▶️ Resume Medicine';
+
+        // Create full-screen overlay with action sheet
+        const overlay = document.createElement('div');
+        overlay.className = 'med-action-overlay';
+        overlay.innerHTML = `
+            <div class="med-action-sheet">
+                <div class="med-action-title">${med.name}</div>
+                <button class="med-action-btn" data-action="toggle">${pauseLabel}</button>
+                <button class="med-action-btn med-action-danger" data-action="delete">🗑 Delete Medicine</button>
+                <button class="med-action-btn med-action-cancel" data-action="cancel">Cancel</button>
+            </div>
+        `;
+
+        // Close on overlay tap
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay || e.target.closest('[data-action="cancel"]')) {
+                this.closeMedMenu();
+            }
+        });
+
+        // Action handlers
+        overlay.querySelector('[data-action="toggle"]').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMedicine(id);
+        });
+        overlay.querySelector('[data-action="delete"]').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.removeMedicine(id);
+        });
+
+        document.body.appendChild(overlay);
+    }
+
+    closeMedMenu() {
+        const overlay = document.querySelector('.med-action-overlay');
+        if (overlay) overlay.remove();
+    }
+
+    renderMedicineHistory() {
+        this.renderMedCalendar();
+        this.renderMedDayLogs();
+    }
+
+    renderMedCalendar() {
+        const now = this.medCalendarMonth;
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const today = new Date();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const monthLabel = now.toLocaleDateString([], { month: 'long', year: 'numeric' });
+
+        // Get all logs and count per date
+        let logs = StorageManager.getMedicineLogs();
+        if (this.medFilter !== 'all') {
+            logs = logs.filter(l => l.for === this.medFilter);
+        }
+        const dateCounts = {};
+        logs.forEach(l => {
+            const d = new Date(l.time);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            dateCounts[key] = (dateCounts[key] || 0) + 1;
+        });
+
+        // Selected date defaults to today
+        const selKey = this.medSelectedDate || `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+        let html = `
+            <div class="cal-header">
+                <button class="cal-nav" onclick="window.__app.calNav(-1)">&lsaquo;</button>
+                <span class="cal-month-label">${monthLabel}</span>
+                <button class="cal-nav" onclick="window.__app.calNav(1)">&rsaquo;</button>
+            </div>
+            <div class="cal-grid">
+                <div class="cal-day-name">Su</div><div class="cal-day-name">Mo</div><div class="cal-day-name">Tu</div>
+                <div class="cal-day-name">We</div><div class="cal-day-name">Th</div><div class="cal-day-name">Fr</div><div class="cal-day-name">Sa</div>
+        `;
+
+        // Empty cells before first day
+        for (let i = 0; i < firstDay; i++) {
+            html += '<div class="cal-cell cal-empty"></div>';
+        }
+
+        // Day cells
+        for (let d = 1; d <= daysInMonth; d++) {
+            const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const count = dateCounts[key] || 0;
+            const isToday = (d === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+            const isSelected = (key === selKey);
+            let cls = 'cal-cell';
+            if (isToday) cls += ' cal-today';
+            if (isSelected) cls += ' cal-selected';
+            if (count > 0) cls += ' cal-has-doses';
+
+            html += `<div class="${cls}" onclick="window.__app.selectMedDate('${key}')">
+                <span class="cal-date-num">${d}</span>
+                ${count > 0 ? `<span class="cal-dot">${count}</span>` : ''}
+            </div>`;
+        }
+
+        html += '</div>';
+        this.medCalendarContainer.innerHTML = html;
+    }
+
+    calNav(dir) {
+        this.medCalendarMonth.setMonth(this.medCalendarMonth.getMonth() + dir);
+        this.medSelectedDate = null;
+        this.renderMedicineHistory();
+    }
+
+    selectMedDate(dateKey) {
+        this.medSelectedDate = dateKey;
+        this.renderMedicineHistory();
+    }
+
+    renderMedDayLogs() {
+        const today = new Date();
+        const selKey = this.medSelectedDate || `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+        let logs = StorageManager.getMedicineLogs();
+        if (this.medFilter !== 'all') {
+            logs = logs.filter(l => l.for === this.medFilter);
+        }
+
+        // Filter logs for the selected date
+        const dayLogs = logs.filter(l => {
+            const d = new Date(l.time);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            return key === selKey;
+        });
+
+        const dateObj = new Date(selKey + 'T00:00:00');
+        const dateLabel = dateObj.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
+
+        if (dayLogs.length === 0) {
+            this.medHistoryContainer.innerHTML = `<div class="med-day-header">${dateLabel}</div><div class="med-empty">No doses on this date.</div>`;
+            return;
+        }
+
+        let html = `<div class="med-day-header">${dateLabel} — ${dayLogs.length} dose${dayLogs.length > 1 ? 's' : ''}</div>`;
+        dayLogs.forEach(log => {
+            const time = new Date(log.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const forEmoji = log.for === 'baby' ? '👶🏻' : '👩🏻';
+            html += `
+                <div class="history-card med-history-card">
+                    <span class="history-icon">💊</span>
+                    <div class="history-info">
+                        <div class="history-type">${log.medicineName}</div>
+                        <div class="history-time">${time} · ${forEmoji} ${log.for === 'baby' ? 'Baby' : 'Mom'}${log.dosage ? ' · ' + log.dosage : ''}</div>
+                    </div>
+                    <span class="history-duration med-badge">${forEmoji}</span>
+                </div>`;
+        });
+        this.medHistoryContainer.innerHTML = html;
     }
 
     resetProfile() {
@@ -915,4 +1402,4 @@ class BabyFeedApp {
 }
 
 // Boot
-document.addEventListener('DOMContentLoaded', () => { new BabyFeedApp(); });
+document.addEventListener('DOMContentLoaded', () => { window.__app = new BabyFeedApp(); });

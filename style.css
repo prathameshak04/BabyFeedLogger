@@ -1,31 +1,31 @@
 /* =============================================
-   BabyFeed AI — Premium Dark Mode UI
+   BabyFeed AI — Cartoon Jungle Theme 🌴🐒
    ============================================= */
 
 :root {
-    --bg-primary: #0a0a1a;
-    --bg-card: rgba(18, 18, 40, 0.85);
-    --bg-glass: rgba(255, 255, 255, 0.04);
+    --bg-primary: #0d1f15;
+    --bg-card: rgba(18, 40, 28, 0.85);
+    --bg-glass: rgba(255, 255, 255, 0.05);
     --border-glass: rgba(255, 255, 255, 0.08);
-    --text-primary: #e8e8f0;
-    --text-secondary: #8888aa;
-    --text-muted: #555570;
-    --accent: #f0a050;
-    --accent-glow: rgba(240, 160, 80, 0.3);
-    --accent-2: #f5c87a;
-    --gradient-main: linear-gradient(135deg, #f0a050, #f5c87a, #ffd699);
-    --gradient-warm: linear-gradient(135deg, #f0a050, #e87840);
-    --success: #3cefb0;
-    --success-glow: rgba(60, 239, 176, 0.25);
-    --danger: #ff5577;
-    --danger-glow: rgba(255, 85, 119, 0.3);
-    --info: #5ca0fc;
-    --info-glow: rgba(92, 160, 252, 0.25);
-    --warning: #ffb84d;
-    --radius: 20px;
-    --radius-sm: 12px;
-    --radius-xs: 8px;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --text-primary: #e0f2e6;
+    --text-secondary: #88aa94;
+    --text-muted: #557060;
+    --accent: #4caf50;
+    --accent-glow: rgba(76, 175, 80, 0.3);
+    --accent-2: #81c784;
+    --gradient-main: linear-gradient(135deg, #66bb6a, #aed581, #c5e1a5);
+    --gradient-warm: linear-gradient(135deg, #66bb6a, #43a047);
+    --success: #4caf50;
+    --success-glow: rgba(76, 175, 80, 0.25);
+    --danger: #ef5350;
+    --danger-glow: rgba(239, 83, 80, 0.3);
+    --info: #4dd0e1;
+    --info-glow: rgba(77, 208, 225, 0.25);
+    --warning: #ffb74d;
+    --radius: 24px;
+    --radius-sm: 16px;
+    --radius-xs: 10px;
+    --font: 'Nunito', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -69,67 +69,154 @@ body {
     z-index: 1;
 }
 
-/* ---- Animated Background Blobs ---- */
-.bg-blobs {
-    position: fixed;
+/* ---- Jungle Scenery (inside app content) ---- */
+.jungle-bg {
+    position: absolute;
     inset: 0;
     overflow: hidden;
     z-index: 0;
     pointer-events: none;
 }
 
-.blob {
+.jungle-trees {
     position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.25;
-    animation: blobFloat 20s ease-in-out infinite;
+    font-size: 3rem;
+    bottom: 10px;
+    left: 2%;
+    opacity: 0.15;
+    animation: treeSway 6s ease-in-out infinite;
 }
 
-.blob-1 {
-    width: 500px;
-    height: 500px;
-    background: #f0a050;
-    top: -150px;
-    left: -100px;
-    animation-delay: 0s;
+.jungle-trees-2 {
+    left: auto;
+    right: 8%;
+    font-size: 3.5rem;
+    animation-delay: -3s;
 }
 
-.blob-2 {
-    width: 400px;
-    height: 400px;
-    background: #e87840;
-    bottom: -100px;
-    right: -80px;
-    animation-delay: -7s;
+.jungle-animal {
+    position: absolute;
+    opacity: 0.15;
+    animation: animalBounce 4s ease-in-out infinite;
 }
 
-.blob-3 {
-    width: 350px;
-    height: 350px;
-    background: #ffd699;
-    top: 50%;
-    left: 60%;
-    animation-delay: -14s;
+.jungle-monkey {
+    font-size: 2rem;
+    top: 15%;
+    right: 10%;
+    animation-delay: -1s;
 }
 
-@keyframes blobFloat {
+.jungle-parrot {
+    font-size: 1.8rem;
+    top: 8%;
+    left: 15%;
+    animation-delay: -2s;
+    animation-duration: 5s;
+}
+
+.jungle-butterfly {
+    font-size: 1.5rem;
+    top: 40%;
+    right: 5%;
+    animation-delay: -0.5s;
+    animation-duration: 3s;
+}
+
+.jungle-elephant {
+    font-size: 2.5rem;
+    bottom: 5%;
+    right: 30%;
+    animation: none;
+    opacity: 0.12;
+}
+
+.jungle-leaves {
+    position: absolute;
+    font-size: 2rem;
+    top: 5%;
+    left: 3%;
+    opacity: 0.18;
+    animation: leafFloat 8s ease-in-out infinite;
+}
+
+.jungle-leaves-2 {
+    top: auto;
+    bottom: 25%;
+    left: auto;
+    right: 3%;
+    animation-delay: -4s;
+}
+
+.jungle-vine {
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 120px;
+    border-radius: 0 0 20px 20px;
+    opacity: 0.1;
+}
+
+.vine-left {
+    left: 12%;
+    background: linear-gradient(to bottom, #66bb6a, transparent);
+}
+
+.vine-right {
+    right: 15%;
+    background: linear-gradient(to bottom, #81c784, transparent);
+    height: 90px;
+}
+
+@keyframes treeSway {
 
     0%,
     100% {
-        transform: translate(0, 0) scale(1);
-    }
-
-    25% {
-        transform: translate(40px, -60px) scale(1.1);
+        transform: rotate(-2deg);
     }
 
     50% {
-        transform: translate(-30px, 40px) scale(0.95);
+        transform: rotate(2deg);
+    }
+}
+
+@keyframes animalBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes leafFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(5px, -8px) rotate(5deg);
     }
 
     75% {
-        transform: translate(50px, 20px) scale(1.05);
+        transform: translate(-3px, 4px) rotate(-3deg);
+    }
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -323,7 +410,7 @@ body {
     color: white;
     font-family: var(--font);
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -401,7 +488,7 @@ body {
     color: var(--text-muted);
     font-family: var(--font);
     font-size: 0.78rem;
-    font-weight: 600;
+    font-weight: 800;
     cursor: pointer;
     transition: var(--transition);
     white-space: nowrap;
@@ -413,9 +500,62 @@ body {
 }
 
 .tab-btn.active {
-    background: var(--gradient-warm);
-    color: white;
-    box-shadow: 0 2px 12px var(--accent-glow);
+    font-weight: 900;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* 🦒 Giraffe — Home tab */
+.tab-btn.active[data-tab="home"] {
+    color: #3a2510;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+    background:
+        radial-gradient(ellipse 12px 14px at 20% 30%, #8B5E3C 60%, transparent 61%),
+        radial-gradient(ellipse 10px 12px at 55% 65%, #8B5E3C 60%, transparent 61%),
+        radial-gradient(ellipse 14px 10px at 80% 25%, #8B5E3C 60%, transparent 61%),
+        radial-gradient(ellipse 10px 14px at 40% 20%, #8B5E3C 60%, transparent 61%),
+        radial-gradient(ellipse 12px 10px at 70% 75%, #8B5E3C 60%, transparent 61%),
+        radial-gradient(ellipse 8px 10px at 10% 70%, #8B5E3C 60%, transparent 61%),
+        linear-gradient(135deg, #f0c040, #e6a817);
+}
+
+/* 🐯 Tiger — Activity tab */
+.tab-btn.active[data-tab="activity"] {
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background:
+        repeating-linear-gradient(115deg,
+            transparent 0px,
+            transparent 6px,
+            rgba(30, 10, 0, 0.7) 6px,
+            rgba(30, 10, 0, 0.7) 9px,
+            transparent 9px,
+            transparent 14px),
+        linear-gradient(135deg, #f57c00, #e65100);
+}
+
+/* 🐘 Elephant — Insights tab */
+.tab-btn.active[data-tab="insights"] {
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    background:
+        radial-gradient(circle 3px at 15% 30%, rgba(255, 255, 255, 0.08) 100%, transparent),
+        radial-gradient(circle 2px at 45% 60%, rgba(255, 255, 255, 0.06) 100%, transparent),
+        radial-gradient(circle 4px at 75% 40%, rgba(255, 255, 255, 0.07) 100%, transparent),
+        radial-gradient(circle 2px at 30% 80%, rgba(255, 255, 255, 0.05) 100%, transparent),
+        radial-gradient(circle 3px at 85% 70%, rgba(255, 255, 255, 0.06) 100%, transparent),
+        linear-gradient(135deg, #78909c, #546e7a);
+}
+
+/* 🐻 Bear — Meds tab */
+.tab-btn.active[data-tab="medicine"] {
+    color: #f5e6d0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background:
+        radial-gradient(circle 4px at 20% 25%, rgba(255, 255, 255, 0.06) 100%, transparent),
+        radial-gradient(circle 3px at 60% 50%, rgba(0, 0, 0, 0.1) 100%, transparent),
+        radial-gradient(circle 4px at 40% 75%, rgba(255, 255, 255, 0.05) 100%, transparent),
+        radial-gradient(circle 3px at 80% 30%, rgba(0, 0, 0, 0.08) 100%, transparent),
+        linear-gradient(135deg, #8d6e63, #5d4037);
 }
 
 .tab-icon {
@@ -578,11 +718,17 @@ body {
     padding: 16px 32px;
     border: none;
     border-radius: 50px;
-    background: var(--gradient-warm);
-    color: white;
+    background:
+        repeating-linear-gradient(115deg,
+            #e0e0e0,
+            #e0e0e0 15px,
+            #1a1a1a 15px,
+            #1a1a1a 30px);
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     font-family: var(--font);
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -617,6 +763,107 @@ body {
 
 .btn-start-icon {
     font-size: 0.9rem;
+}
+
+/* ---- Bottle Feed Form ---- */
+.bottle-form {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+.bottle-input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.bottle-input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bottle-input-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.bottle-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.bottle-input-wrap input {
+    width: 100%;
+    padding: 12px 42px 12px 14px;
+    background: var(--bg-glass);
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 1.1rem;
+    font-weight: 700;
+    outline: none;
+    transition: var(--transition);
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+.bottle-input-wrap input::-webkit-inner-spin-button,
+.bottle-input-wrap input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.bottle-input-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.bottle-unit {
+    position: absolute;
+    right: 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.bottle-input-group input[type="time"] {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-glass);
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    transition: var(--transition);
+    -webkit-appearance: none;
+}
+
+.bottle-input-group input[type="time"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.bottle-input-group input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+}
+
+/* 🦓 Zebra — Bottle Feed Button */
+.btn-log-bottle {
+    align-self: center;
 }
 
 /* Active Session */
@@ -1299,4 +1546,671 @@ body {
     background: rgba(160, 120, 80, 0.1) !important;
     color: inherit !important;
     font-size: 1rem !important;
+}
+
+/* =============================================
+   MEDICINE TRACKER TAB
+   ============================================= */
+
+/* Header row with title + Add button */
+.med-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.btn-add-med {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    letter-spacing: 0.02em;
+}
+
+.btn-add-med:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
+}
+
+.btn-add-med:active {
+    transform: translateY(0);
+}
+
+/* Baby / Mom / All toggle row */
+.med-toggle-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.med-toggle-btn {
+    flex: 1;
+    padding: 9px 8px;
+    border: 1.5px solid var(--border-glass);
+    border-radius: 50px;
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.med-toggle-btn:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.med-toggle-btn.active {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+    box-shadow: 0 2px 12px rgba(34, 197, 94, 0.2);
+}
+
+/* Today's dose count badge */
+.med-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    margin-bottom: 14px;
+    background: rgba(34, 197, 94, 0.06);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    border-radius: var(--radius-xs);
+}
+
+.med-stat-icon {
+    font-size: 1.2rem;
+}
+
+.med-stat-count {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #4ade80;
+    font-variant-numeric: tabular-nums;
+}
+
+.med-stat-label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Medicine list */
+.med-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.med-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    padding: 24px 16px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+}
+
+/* Medicine card */
+.med-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    border-left: 3px solid rgba(34, 197, 94, 0.4);
+    transition: var(--transition);
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+.med-card:hover {
+    border-color: rgba(34, 197, 94, 0.25);
+    transform: translateY(-1px);
+}
+
+.med-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.med-card-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.med-card-detail {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.med-dosage {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+.med-for-tag {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.med-for-tag.baby {
+    background: rgba(250, 204, 21, 0.12);
+    color: #fbbf24;
+}
+
+.med-for-tag.mom {
+    background: rgba(236, 72, 153, 0.12);
+    color: #f472b6;
+}
+
+.med-today-badge {
+    color: var(--success);
+    font-weight: 700;
+}
+
+/* Card action buttons */
+.med-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-take-med {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.btn-take-med:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn-take-med:active {
+    transform: translateY(0);
+}
+
+.btn-remove-med {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(255, 85, 119, 0.2);
+    border-radius: 50%;
+    background: rgba(255, 85, 119, 0.06);
+    color: rgba(255, 85, 119, 0.6);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-remove-med:hover {
+    background: rgba(255, 85, 119, 0.15);
+    border-color: rgba(255, 85, 119, 0.4);
+    color: #ff5577;
+}
+
+/* Medicine history section */
+.med-history-section {
+    margin-top: 4px;
+}
+
+.med-history-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* ---- Calendar Widget ---- */
+.med-calendar-container {
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 4px;
+    margin-bottom: 16px;
+}
+
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 6px 4px;
+}
+
+.cal-month-label {
+    font-size: 1rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #4ade80, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.02em;
+}
+
+.cal-nav {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    background: rgba(34, 197, 94, 0.06);
+    color: #4ade80;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cal-nav:hover {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.4);
+    transform: scale(1.08);
+}
+
+.cal-nav:active {
+    transform: scale(0.95);
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    justify-items: center;
+}
+
+.cal-day-name {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: rgba(74, 222, 128, 0.5);
+    padding: 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.cal-cell {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 0px;
+    border: 1.5px solid transparent;
+}
+
+.cal-cell:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: scale(1.08);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.cal-cell:active {
+    transform: scale(0.92);
+}
+
+.cal-cell.cal-empty {
+    cursor: default;
+    pointer-events: none;
+}
+
+.cal-date-num {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.35);
+    line-height: 1;
+}
+
+.cal-cell.cal-today {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.25);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.12);
+}
+
+.cal-cell.cal-today .cal-date-num {
+    color: #4ade80;
+    font-weight: 800;
+}
+
+.cal-cell.cal-selected {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(250, 204, 21, 0.12));
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.2), inset 0 0 8px rgba(34, 197, 94, 0.05);
+}
+
+.cal-cell.cal-selected .cal-date-num {
+    color: #fff;
+    font-weight: 800;
+}
+
+.cal-cell.cal-has-doses .cal-date-num {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.cal-dot {
+    font-size: 0.45rem;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    min-width: 12px;
+    height: 12px;
+    padding: 0 2px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 2px 14px rgba(16, 185, 129, 0.5);
+    }
+}
+
+.med-day-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    padding: 12px 0 8px;
+    border-bottom: 1px solid var(--border-glass);
+    margin-bottom: 10px;
+}
+
+/* Medicine history card accent */
+.history-card.med-history-card {
+    border-left: 3px solid rgba(34, 197, 94, 0.4);
+}
+
+.med-badge {
+    background: rgba(34, 197, 94, 0.1) !important;
+    color: inherit !important;
+    font-size: 1rem !important;
+}
+
+/* Add Medicine Modal */
+.med-modal-card {
+    border-top: 3px solid #22c55e;
+}
+
+.med-for-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.med-for-chip {
+    flex: 1;
+    padding: 12px 8px;
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.med-for-chip:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.med-for-chip.active {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
+}
+
+/* Medicine section margin */
+.med-section {
+    margin-bottom: 24px;
+}
+
+/* Paused medicine card */
+.med-card.med-card-paused {
+    opacity: 0.55;
+    border-left-color: rgba(255, 255, 255, 0.1);
+    border-style: dashed;
+}
+
+.med-card.med-card-paused:hover {
+    opacity: 0.75;
+}
+
+.med-paused-tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    background: rgba(255, 165, 0, 0.15);
+    color: #fbbf24;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+/* Pause / Resume / Options buttons */
+.btn-pause-med,
+.btn-resume-med {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-pause-med:hover {
+    background: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+}
+
+.btn-resume-med:hover {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+/* ⋯ options button */
+.btn-med-more {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 1px;
+}
+
+.btn-med-more:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+}
+
+/* Full-screen action sheet overlay */
+.med-action-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.med-action-sheet {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(18, 40, 28, 0.97);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 6px;
+    animation: slideUp 0.2s ease-out;
+    margin-bottom: env(safe-area-inset-bottom, 10px);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.med-action-title {
+    text-align: center;
+    padding: 14px 16px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.med-action-btn {
+    width: 100%;
+    padding: 15px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: var(--transition);
+    border-radius: 12px;
+}
+
+.med-action-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.med-action-btn.med-action-danger {
+    color: #ff5577;
+}
+
+.med-action-btn.med-action-danger:hover {
+    background: rgba(255, 85, 119, 0.08);
+}
+
+.med-action-btn.med-action-cancel {
+    color: var(--text-muted);
+    margin-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-weight: 500;
+}
+
+/* Resume inline button (shown when paused instead of Take) */
+.btn-resume-inline {
+    padding: 7px 14px;
+    border: 1.5px solid rgba(16, 185, 129, 0.3);
+    border-radius: 50px;
+    background: rgba(16, 185, 129, 0.08);
+    color: #10b981;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.btn-resume-inline:hover {
+    background: rgba(16, 185, 129, 0.18);
+    border-color: rgba(16, 185, 129, 0.5);
+    transform: translateY(-1px);
 }

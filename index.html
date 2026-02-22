@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description"
         content="AI-powered baby feeding tracker — log sessions, track patterns, and get smart insights." />
-    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="theme-color" content="#1a3a2a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>BabyFeed AI — Smart Feeding Logger</title>
@@ -15,19 +15,14 @@
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍼</text></svg>" />
     <link rel="apple-touch-icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍼</text></svg>" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
     <div class="app">
-        <!-- Background animated blobs -->
-        <div class="bg-blobs">
-            <div class="blob blob-1"></div>
-            <div class="blob blob-2"></div>
-            <div class="blob blob-3"></div>
-        </div>
+
 
         <!-- ===== ONBOARDING SCREEN ===== -->
         <div id="onboardingScreen" class="screen onboarding-screen">
@@ -83,6 +78,17 @@
 
         <!-- ===== DASHBOARD SCREEN ===== -->
         <div id="dashboardScreen" class="screen dashboard-screen hidden">
+            <!-- Jungle decorations inside content -->
+            <div class="jungle-bg">
+                <div class="jungle-animal jungle-monkey">🐒</div>
+                <div class="jungle-animal jungle-parrot">🦜</div>
+                <div class="jungle-animal jungle-butterfly">🦋</div>
+                <div class="jungle-animal jungle-elephant">🐘</div>
+                <div class="jungle-leaves">🌿</div>
+                <div class="jungle-leaves jungle-leaves-2">🍃</div>
+                <div class="jungle-trees">🌴</div>
+                <div class="jungle-trees jungle-trees-2">🌳</div>
+            </div>
             <header class="dash-header">
                 <div class="dash-header-info">
                     <div class="dash-logo"><span>🍼</span>
@@ -96,16 +102,20 @@
             <!-- Tab Navigation -->
             <nav class="tab-bar">
                 <button class="tab-btn active" data-tab="home">
-                    <span class="tab-icon">🏠</span>
+                    <span class="tab-icon">🦒</span>
                     <span class="tab-label">Home</span>
                 </button>
                 <button class="tab-btn" data-tab="activity">
-                    <span class="tab-icon">📋</span>
+                    <span class="tab-icon">🐯</span>
                     <span class="tab-label">Activity</span>
                 </button>
                 <button class="tab-btn" data-tab="insights">
-                    <span class="tab-icon">🧠</span>
+                    <span class="tab-icon">🐘</span>
                     <span class="tab-label">Insights</span>
+                </button>
+                <button class="tab-btn" data-tab="medicine">
+                    <span class="tab-icon">🐻</span>
+                    <span class="tab-label">Meds</span>
                 </button>
             </nav>
 
@@ -125,6 +135,27 @@
                             <span class="btn-start-icon">▶</span>
                             <span>Start Feeding</span>
                         </button>
+                        <!-- Bottle Feed Form (shown when Bottle is selected) -->
+                        <div id="bottleForm" class="bottle-form hidden">
+                            <div class="bottle-input-row">
+                                <div class="bottle-input-group">
+                                    <label for="bottleAmount">Amount</label>
+                                    <div class="bottle-input-wrap">
+                                        <input type="number" id="bottleAmount" min="1" max="500" placeholder="120"
+                                            required />
+                                        <span class="bottle-unit">ml</span>
+                                    </div>
+                                </div>
+                                <div class="bottle-input-group">
+                                    <label for="bottleTime">Time</label>
+                                    <input type="time" id="bottleTime" />
+                                </div>
+                            </div>
+                            <button id="logBottleBtn" class="btn-start btn-log-bottle">
+                                <span class="btn-start-icon">🍼</span>
+                                <span>Log Bottle Feed</span>
+                            </button>
+                        </div>
                     </div>
                     <div id="sessionActive" class="session-active hidden">
                         <div class="timer-ring">
@@ -176,7 +207,7 @@
                         <div class="stat-card">
                             <span class="stat-icon">📈</span>
                             <span id="statTotalTime" class="stat-value">—</span>
-                            <span class="stat-label">Total Today</span>
+                            <span class="stat-label">Total Bottle Milk Today</span>
                         </div>
                     </div>
                 </section>
@@ -209,6 +240,36 @@
                     <h3 class="section-title">🧠 AI Insights</h3>
                     <div id="insightsContainer" class="insights-container">
                         <div class="insight-empty">Log a few feeding sessions to unlock AI-powered insights.</div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- ===== TAB: MEDICINE ===== -->
+            <main id="tabMedicine" class="tab-content dash-card hidden">
+                <section class="med-section">
+                    <div class="med-header-row">
+                        <h3 class="section-title">💊 Medicine List</h3>
+                        <button id="addMedBtn" class="btn-add-med">＋ Add</button>
+                    </div>
+
+                    <!-- Baby / Mom toggle -->
+                    <div class="med-toggle-row">
+                        <button class="med-toggle-btn active" data-med-filter="all">All</button>
+                        <button class="med-toggle-btn" data-med-filter="baby">👶🏻 Baby</button>
+                        <button class="med-toggle-btn" data-med-filter="mom">👩🏻 Mom</button>
+                    </div>
+
+                    <!-- Medicine cards rendered here -->
+                    <div id="medicineListContainer" class="med-list-container">
+                        <div class="med-empty">No medicines added yet. Tap ＋ Add to get started.</div>
+                    </div>
+                </section>
+
+                <section class="med-history-section">
+                    <h3 class="section-title">📅 Medicine Calendar</h3>
+                    <div id="medCalendarContainer" class="med-calendar-container"></div>
+                    <div id="medHistoryContainer" class="med-history-container">
+                        <div class="med-empty">Tap a date to view doses.</div>
                     </div>
                 </section>
             </main>
@@ -252,6 +313,38 @@
                     <div class="modal-actions">
                         <button type="button" id="poopCancelBtn" class="btn-secondary">Cancel</button>
                         <button type="submit" class="btn-primary btn-sm">💩 Log It</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== ADD MEDICINE MODAL ===== -->
+        <div id="medModal" class="modal-overlay hidden">
+            <div class="modal-card med-modal-card">
+                <h3 class="modal-title">💊 Add Medicine</h3>
+                <form id="medForm">
+                    <div class="form-group">
+                        <label for="medName">Medicine Name</label>
+                        <input type="text" id="medName" placeholder="e.g. Vitamin D drops" required />
+                    </div>
+                    <div class="form-group">
+                        <label>For</label>
+                        <div class="med-for-selector">
+                            <button type="button" class="med-for-chip active" data-for="baby">👶🏻 Baby</button>
+                            <button type="button" class="med-for-chip" data-for="mom">👩🏻 Mom</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="medDosage">Dosage (optional)</label>
+                        <input type="text" id="medDosage" placeholder="e.g. 1 drop, 500mg" />
+                    </div>
+                    <div class="form-group">
+                        <label for="medNotes">Notes (optional)</label>
+                        <textarea id="medNotes" placeholder="Any special instructions…" rows="2"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="medCancelBtn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary btn-sm">💊 Add Medicine</button>
                     </div>
                 </form>
             </div>
