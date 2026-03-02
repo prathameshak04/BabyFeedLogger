@@ -1,4 +1,4 @@
-const CACHE_NAME = 'babyfeed-ai-v1';
+const CACHE_NAME = 'babyfeed-ai-v2';
 const ASSETS = [
     './',
     './index.html',

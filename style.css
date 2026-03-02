@@ -304,7 +304,135 @@ body {
 .onboarding-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.5rem;
+}
+
+.form-actions-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.form-actions-row button {
+    flex: 1;
+}
+
+.btn-danger {
+    background-color: transparent;
+    border: 2px solid #ef4444;
+    color: #ef4444;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Settings Modal */
+.settings-modal-card {
+    max-width: 420px;
+}
+
+.settings-danger-zone {
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.danger-zone-label {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-danger-full {
+    width: 100%;
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid #ef4444;
+    color: #ef4444;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-danger-full:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+/* Reset Confirm Modal */
+.reset-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeInOverlay 0.2s ease;
+}
+
+.reset-confirm-card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+}
+
+.reset-confirm-card .reset-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.reset-confirm-card h3 {
+    color: #ef4444;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.reset-confirm-card p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.reset-confirm-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.reset-confirm-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+}
+
+.reset-confirm-actions .btn-cancel-reset {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.reset-confirm-actions .btn-confirm-reset {
+    background: #ef4444;
+    color: white;
 }
 
 .form-group {
@@ -711,7 +839,7 @@ body {
     color: var(--accent-2);
 }
 
-/* Start Button */
+/* Start Button — 🐘 Elephant Skin */
 .btn-start {
     width: 100%;
     max-width: 280px;
@@ -719,13 +847,34 @@ body {
     border: none;
     border-radius: 50px;
     background:
-        repeating-linear-gradient(115deg,
-            #e0e0e0,
-            #e0e0e0 15px,
-            #1a1a1a 15px,
-            #1a1a1a 30px);
-    color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+        /* wrinkle lines */
+        repeating-linear-gradient(140deg,
+            transparent 0px,
+            transparent 8px,
+            rgba(0, 0, 0, 0.07) 8px,
+            rgba(0, 0, 0, 0.07) 9px,
+            transparent 9px,
+            transparent 18px),
+        repeating-linear-gradient(50deg,
+            transparent 0px,
+            transparent 10px,
+            rgba(0, 0, 0, 0.05) 10px,
+            rgba(0, 0, 0, 0.05) 11px,
+            transparent 11px,
+            transparent 22px),
+        /* pebbled texture */
+        radial-gradient(circle 4px at 15% 30%, rgba(255, 255, 255, 0.09) 100%, transparent),
+        radial-gradient(circle 3px at 45% 60%, rgba(255, 255, 255, 0.07) 100%, transparent),
+        radial-gradient(circle 5px at 75% 35%, rgba(255, 255, 255, 0.08) 100%, transparent),
+        radial-gradient(circle 3px at 30% 80%, rgba(255, 255, 255, 0.06) 100%, transparent),
+        radial-gradient(circle 4px at 85% 65%, rgba(255, 255, 255, 0.07) 100%, transparent),
+        radial-gradient(circle 3px at 60% 20%, rgba(255, 255, 255, 0.05) 100%, transparent),
+        radial-gradient(circle 4px at 10% 60%, rgba(0, 0, 0, 0.06) 100%, transparent),
+        radial-gradient(circle 3px at 90% 40%, rgba(0, 0, 0, 0.05) 100%, transparent),
+        /* base grey gradient */
+        linear-gradient(135deg, #8e9eab, #6b7b8d, #78909c);
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     font-family: var(--font);
     font-size: 1rem;
     font-weight: 800;
@@ -737,6 +886,10 @@ body {
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+        0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .btn-start::before {
@@ -763,6 +916,420 @@ body {
 
 .btn-start-icon {
     font-size: 0.9rem;
+}
+
+/* ---- Past-Time Start ---- */
+.past-time-toggle {
+    width: 100%;
+    text-align: center;
+}
+
+.past-toggle-link {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 4px 8px;
+}
+
+.past-toggle-link:hover {
+    color: var(--accent-2);
+}
+
+.past-toggle-link.active {
+    color: var(--accent);
+}
+
+.past-time-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-glass);
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    padding: 10px 14px;
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+.past-time-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.past-time-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.past-time-adj {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-glass);
+    background: var(--bg-glass);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.past-time-adj:hover {
+    border-color: var(--accent);
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.past-time-input {
+    width: 52px;
+    text-align: center;
+    padding: 6px 4px;
+    border: 1.5px solid var(--border-glass);
+    border-radius: 8px;
+    background: var(--bg-glass);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 700;
+    outline: none;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.past-time-input::-webkit-inner-spin-button,
+.past-time-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.past-time-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.past-time-unit {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* ---- Log Past Session Link ---- */
+.past-session-link {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 6px 12px;
+    border-radius: 50px;
+}
+
+.past-session-link:hover {
+    color: var(--accent-2);
+    background: var(--bg-glass);
+}
+
+/* ---- Past Session Modal ---- */
+.past-duration-row {
+    display: flex;
+    gap: 12px;
+}
+
+.past-dur-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.past-dur-group input {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-glass);
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.past-dur-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.past-dur-unit {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.past-feed-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.past-feed-chip {
+    flex: 1;
+    padding: 10px 8px;
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.past-feed-chip:hover {
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.past-feed-chip.active {
+    border-color: var(--accent);
+    background: rgba(76, 175, 80, 0.12);
+    color: var(--accent-2);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.15);
+}
+
+/* ---- Clock Pick Button ---- */
+.clock-pick-btn {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg-glass);
+    border: 1.5px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+    text-align: left;
+}
+
+.clock-pick-btn:hover {
+    border-color: var(--accent);
+    background: rgba(76, 175, 80, 0.06);
+}
+
+.clock-pick-icon {
+    font-size: 1.2rem;
+}
+
+/* ---- Clock Dial Overlay ---- */
+.clock-dial-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeSlideIn 0.25s ease-out;
+}
+
+.clock-dial-card {
+    width: 300px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.clock-dial-header {
+    text-align: center;
+}
+
+.clock-dial-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Time display */
+.clock-dial-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.clock-time-part {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 56px;
+    text-align: center;
+}
+
+.clock-time-part.active {
+    color: var(--text-primary);
+    background: rgba(76, 175, 80, 0.15);
+}
+
+.clock-time-sep {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+.clock-ampm-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 8px;
+}
+
+.ampm-btn {
+    padding: 4px 8px;
+    border: 1px solid var(--border-glass);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ampm-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+/* Clock dial ring */
+.clock-dial-ring-wrap {
+    position: relative;
+    width: 240px;
+    height: 240px;
+}
+
+.clock-dial-ring {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid var(--border-glass);
+}
+
+.clock-dial-center-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.clock-dial-hand {
+    position: absolute;
+    width: 2px;
+    height: 80px;
+    background: var(--accent);
+    top: 50%;
+    left: 50%;
+    transform-origin: 50% 0%;
+    transform: translateX(-50%) rotate(0deg);
+    z-index: 2;
+    border-radius: 2px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clock-dial-hand::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(76, 175, 80, 0.25);
+    border: 2px solid var(--accent);
+}
+
+/* Clock numbers */
+.clock-num {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: var(--transition);
+    z-index: 4;
+    user-select: none;
+}
+
+.clock-num:hover {
+    background: rgba(76, 175, 80, 0.15);
+    color: var(--text-primary);
+}
+
+.clock-num.selected {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Clock actions */
+.clock-dial-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.clock-act-btn {
+    flex: 1;
 }
 
 /* ---- Bottle Feed Form ---- */
@@ -2213,4 +2780,486 @@ body {
     background: rgba(16, 185, 129, 0.18);
     border-color: rgba(16, 185, 129, 0.5);
     transform: translateY(-1px);
+}
+
+/* ============================================================
+   MILESTONES TAB
+   ============================================================ */
+
+/* Button row */
+.milestone-btn-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.milestone-action-btn {
+    flex: 1;
+    padding: 12px 14px;
+    border: none;
+    border-radius: var(--radius-xs);
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.insights-btn {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.08));
+    color: #a78bfa;
+    border: 1.5px solid rgba(124, 58, 237, 0.3);
+}
+
+.insights-btn:hover {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(124, 58, 237, 0.15));
+    transform: translateY(-1px);
+}
+
+.completed-btn {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.08));
+    color: #fbbf24;
+    border: 1.5px solid rgba(245, 158, 11, 0.3);
+}
+
+.completed-btn:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(245, 158, 11, 0.15));
+    transform: translateY(-1px);
+}
+
+/* Milestone list */
+.milestone-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Week headers */
+.milestone-week-group {
+    margin-bottom: 6px;
+}
+
+.milestone-week-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 6px 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.milestone-week-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-glass);
+}
+
+/* Milestone item */
+.milestone-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.milestone-item:hover {
+    border-color: rgba(76, 175, 80, 0.3);
+    background: rgba(76, 175, 80, 0.04);
+}
+
+.milestone-check {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border: 2px solid rgba(76, 175, 80, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    margin-top: 2px;
+    transition: var(--transition);
+    color: transparent;
+}
+
+.milestone-item:hover .milestone-check {
+    border-color: var(--accent);
+}
+
+.milestone-item.done .milestone-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.milestone-item-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.milestone-item-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.milestone-item-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.milestone-item-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.milestone-item.done .milestone-item-title,
+.milestone-item.done .milestone-item-desc {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+/* Completed list in modal */
+.completed-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.completed-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xs);
+}
+
+.completed-item-icon {
+    font-size: 1.3rem;
+}
+
+.completed-item-body {
+    flex: 1;
+}
+
+.completed-item-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.completed-item-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Larger modal for insights/completed */
+.modal-card-lg {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* ============================================================
+   MEMORIES GALLERY
+   ============================================================ */
+.memories-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.btn-add-memory {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.btn-add-memory:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+}
+
+.memories-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.memories-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.memories-empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.memory-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 1;
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.memory-card:hover {
+    transform: scale(1.03);
+}
+
+.memory-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.memory-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+}
+
+.memory-card-caption {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.memory-card-date {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.memory-card-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(124, 58, 237, 0.85);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+}
+
+/* Add Memory Modal */
+.memory-modal-card {
+    max-width: 440px;
+}
+
+.memory-photo-picker {
+    cursor: pointer;
+    display: block;
+}
+
+.memory-photo-preview {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 16px;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: border-color 0.2s;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.memory-photo-preview:hover {
+    border-color: rgba(124, 58, 237, 0.5);
+}
+
+.memory-photo-preview.has-photo {
+    border: none;
+}
+
+.memory-photo-preview.has-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-preview-icon {
+    font-size: 2.5rem;
+}
+
+.photo-preview-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.memory-milestone-select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 0.95rem;
+    font-family: inherit;
+    appearance: auto;
+}
+
+.memory-milestone-select option {
+    background: #1a3a2a;
+    color: white;
+}
+
+/* Photo Viewer */
+.photo-viewer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInOverlay 0.2s ease;
+}
+
+.photo-viewer-content {
+    max-width: 600px;
+    width: 92%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
+
+.photo-viewer-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    z-index: 10;
+}
+
+.photo-viewer-img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+.photo-viewer-info {
+    text-align: center;
+    width: 100%;
+}
+
+.photo-viewer-caption {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.photo-viewer-meta {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.photo-viewer-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 10px;
+    margin-top: 6px;
+}
+
+.photo-viewer-tag:empty {
+    display: none;
+}
+
+.photo-viewer-delete {
+    max-width: 280px;
+    margin-top: 0.5rem;
+}
+
+/* ============================================================
+   CONFETTI ANIMATION
+   ============================================================ */
+.confetti-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    animation: confettiFall 3s ease-in forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg) scale(0.3);
+        opacity: 0;
+    }
 }

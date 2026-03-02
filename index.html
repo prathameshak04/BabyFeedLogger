@@ -68,10 +68,13 @@
                         <textarea id="babyNotes" placeholder="Any allergies, preferences, or notes…"
                             rows="3"></textarea>
                     </div>
-                    <button type="submit" class="btn-primary" id="startBtn">
-                        <span>Get Started</span>
-                        <span class="btn-arrow">→</span>
-                    </button>
+                    <div class="form-actions-row">
+                        <button type="button" class="btn-danger hidden" id="resetDataBtn">Reset All Data</button>
+                        <button type="submit" class="btn-primary" id="startBtn">
+                            <span>Get Started</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -108,7 +111,7 @@
                     <span class="tab-label">Activity</span>
                 </button>
                 <button class="tab-btn" data-tab="insights">
-                    <span class="tab-label">Insights</span>
+                    <span class="tab-label">Milestones</span>
                 </button>
                 <button class="tab-btn" data-tab="medicine">
                     <span class="tab-label">Meds</span>
@@ -127,10 +130,27 @@
                             <button class="feed-chip" data-type="right-breast">🤱 Right</button>
                             <button class="feed-chip" data-type="bottle">🍼 Bottle</button>
                         </div>
+                        <!-- Past-time start option -->
+                        <div class="past-time-toggle">
+                            <button type="button" id="pastTimeToggle" class="past-toggle-link">⏪ Started
+                                earlier?</button>
+                        </div>
+                        <div id="pastTimeRow" class="past-time-row hidden">
+                            <label class="past-time-label">Started</label>
+                            <div class="past-time-input-wrap">
+                                <button type="button" class="past-time-adj" id="pastTimeMinus">−</button>
+                                <input type="number" id="pastTimeMinutes" class="past-time-input" min="1" max="180"
+                                    value="10" />
+                                <button type="button" class="past-time-adj" id="pastTimePlus">+</button>
+                            </div>
+                            <span class="past-time-unit">min ago</span>
+                        </div>
                         <button id="startFeedBtn" class="btn-start">
                             <span class="btn-start-icon">▶</span>
                             <span>Start Feeding</span>
                         </button>
+                        <!-- Log Past Session link -->
+                        <button type="button" id="logPastBtn" class="past-session-link">📝 Log a past session</button>
                         <!-- Bottle Feed Form (shown when Bottle is selected) -->
                         <div id="bottleForm" class="bottle-form hidden">
                             <div class="bottle-input-row">
@@ -208,13 +228,6 @@
                     </div>
                 </section>
 
-                <!-- Milestones -->
-                <section class="milestones-section">
-                    <h3 class="section-title">🎯 Milestones</h3>
-                    <div id="milestonesContainer" class="milestones-container">
-                        <div class="insight-empty">Milestones will appear based on your baby's age.</div>
-                    </div>
-                </section>
             </main>
 
             <!-- ===== TAB: ACTIVITY ===== -->
@@ -230,12 +243,20 @@
                 </section>
             </main>
 
-            <!-- ===== TAB: INSIGHTS ===== -->
+            <!-- ===== TAB: MILESTONES (was Insights) ===== -->
             <main id="tabInsights" class="tab-content dash-card hidden">
-                <section class="insights-section">
-                    <h3 class="section-title">🧠 AI Insights</h3>
-                    <div id="insightsContainer" class="insights-container">
-                        <div class="insight-empty">Log a few feeding sessions to unlock AI-powered insights.</div>
+                <section class="milestones-tab-section">
+                    <div class="milestone-btn-row">
+                        <button type="button" id="aiInsightsBtn" class="milestone-action-btn insights-btn">
+                            <span>🧠</span> AI Insights
+                        </button>
+                        <button type="button" id="completedMilestonesBtn" class="milestone-action-btn completed-btn">
+                            <span>🏆</span> Completed
+                        </button>
+                    </div>
+                    <h3 class="section-title" id="milestoneWeekTitle">🎯 Upcoming Milestones</h3>
+                    <div id="milestoneListContainer" class="milestone-list-container">
+                        <div class="insight-empty">Milestones will appear based on your baby's age.</div>
                     </div>
                 </section>
             </main>
@@ -346,6 +367,143 @@
             </div>
         </div>
     </div>
+
+    <!-- ===== LOG PAST SESSION MODAL ===== -->
+    <div id="pastSessionModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3 class="modal-title">📝 Log Past Session</h3>
+            <form id="pastSessionForm">
+                <div class="form-group">
+                    <label for="pastDate">Date</label>
+                    <input type="date" id="pastDate" required />
+                </div>
+                <div class="form-group">
+                    <label>Start Time</label>
+                    <button type="button" id="pastTimeBtn" class="clock-pick-btn">
+                        <span class="clock-pick-icon">🕐</span>
+                        <span id="pastTimeBtnLabel">03:00 PM</span>
+                    </button>
+                </div>
+                <!-- Hidden input to store the actual value -->
+                <input type="hidden" id="pastStartTime" />
+
+                <!-- Clock Dial Overlay (inside the modal) -->
+                <div id="clockDialOverlay" class="clock-dial-overlay hidden">
+                    <div class="clock-dial-card">
+                        <div class="clock-dial-header">
+                            <span id="clockDialTitle" class="clock-dial-title">Select Hour</span>
+                        </div>
+                        <div class="clock-dial-display">
+                            <span id="clockHourDisplay" class="clock-time-part active">12</span>
+                            <span class="clock-time-sep">:</span>
+                            <span id="clockMinDisplay" class="clock-time-part">00</span>
+                            <div class="clock-ampm-toggle">
+                                <button type="button" class="ampm-btn active" data-ampm="AM">AM</button>
+                                <button type="button" class="ampm-btn" data-ampm="PM">PM</button>
+                            </div>
+                        </div>
+                        <div class="clock-dial-ring-wrap">
+                            <div id="clockDial" class="clock-dial-ring">
+                                <div class="clock-dial-center-dot"></div>
+                                <div id="clockDialHand" class="clock-dial-hand"></div>
+                                <!-- Numbers will be rendered by JS -->
+                            </div>
+                        </div>
+                        <div class="clock-dial-actions">
+                            <button type="button" id="clockBackBtn"
+                                class="btn-secondary clock-act-btn hidden">Back</button>
+                            <button type="button" id="clockConfirmBtn"
+                                class="btn-primary btn-sm clock-act-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <div class="past-duration-row">
+                        <div class="past-dur-group">
+                            <input type="number" id="pastDurMin" min="0" max="120" placeholder="0" />
+                            <span class="past-dur-unit">min</span>
+                        </div>
+                        <div class="past-dur-group">
+                            <input type="number" id="pastDurSec" min="0" max="59" placeholder="0" />
+                            <span class="past-dur-unit">sec</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Feed Type</label>
+                    <div class="past-feed-selector">
+                        <button type="button" class="past-feed-chip active" data-past-feed="left-breast">🤱
+                            Left</button>
+                        <button type="button" class="past-feed-chip" data-past-feed="right-breast">🤱 Right</button>
+                        <button type="button" class="past-feed-chip" data-past-feed="bottle">🍼 Bottle</button>
+                    </div>
+                </div>
+                <div id="pastBottleRow" class="form-group hidden">
+                    <label for="pastBottleAmt">Amount (ml)</label>
+                    <input type="number" id="pastBottleAmt" min="1" max="500" placeholder="120" />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="pastSessionCancelBtn" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary btn-sm">📝 Log Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== AI INSIGHTS MODAL ===== -->
+    <div id="insightsModal" class="modal-overlay hidden">
+        <div class="modal-card modal-card-lg">
+            <h3 class="modal-title">🧠 AI Insights</h3>
+            <div id="insightsContainer" class="insights-container">
+                <div class="insight-empty">Log a few feeding sessions to unlock AI-powered insights.</div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="insightsCloseBtn" class="btn-primary btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== COMPLETED MILESTONES MODAL ===== -->
+    <div id="completedModal" class="modal-overlay hidden">
+        <div class="modal-card modal-card-lg">
+            <h3 class="modal-title">🏆 Completed Milestones</h3>
+            <div id="completedListContainer" class="completed-list-container">
+                <div class="insight-empty">No milestones completed yet. Keep going!</div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="completedCloseBtn" class="btn-primary btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SETTINGS MODAL ===== -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-card settings-modal-card">
+            <h3 class="modal-title">⚙️ Settings</h3>
+            <form id="settingsForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="settingsBabyName">Baby's Name</label>
+                    <input type="text" id="settingsBabyName" placeholder="e.g. Aria" required />
+                </div>
+                <div class="form-group">
+                    <label for="settingsBabyDob">Date of Birth</label>
+                    <input type="date" id="settingsBabyDob" />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="settingsCancelBtn" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary btn-sm">💾 Save</button>
+                </div>
+            </form>
+            <div class="settings-danger-zone">
+                <p class="danger-zone-label">⚠️ Danger Zone</p>
+                <button type="button" id="resetAllDataBtn" class="btn-danger-full">🗑️ Reset All Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <div id="confettiCanvas" class="confetti-canvas"></div>
 
     <script src="app.js"></script>
 </body>
